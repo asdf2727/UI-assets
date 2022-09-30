@@ -22,6 +22,7 @@ public class UI_Cell {
 		if (pos + 1 < text.Length && text[pos] == '[' && text[pos + 1] != '[') {
 			new_markup = true;
 			string interpret = "";
+			pos++;
 			while (pos < text.Length && text[pos] != ']') {
 				interpret += text[pos];
 				pos++;
@@ -43,8 +44,8 @@ public class UI_Cell {
 	private void NextChar() {
 		if (pos < text.Length) {
 			pos++;
+			ReadMarkup();
 		}
-		ReadMarkup();
 	}
 	private void SkipSpaces() {
 		while (pos < text.Length && text[pos] == ' ') {
@@ -85,7 +86,8 @@ public class UI_Cell {
             int last_pos = -1, last_len = -1;
             StringBuilder last_build = new();
             string last_markup = "/";
-            
+			bool last_new_markup = false;
+			
             // Calculate the string part to include
             while (true) {
             	// Save state for all spaces and '\n'
@@ -94,7 +96,8 @@ public class UI_Cell {
             		last_len = len;
             		last_build.Clear(); last_build.Append(build_text);
             		last_markup = ""; last_markup += markup;
-            	}
+					last_new_markup = new_markup;
+				}
             	// Stop at first '\n'
             	if (text[pos] == '\n') {
             		break;
@@ -123,7 +126,8 @@ public class UI_Cell {
             	len = last_len;
             	build_text = last_build;
             	markup = last_markup;
-            }
+				new_markup = last_new_markup;
+			}
             if (markup != "/" && !new_markup) {
             	// End markup if required
             	build_text.Append("[/]");
