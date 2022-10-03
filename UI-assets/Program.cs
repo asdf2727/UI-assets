@@ -1,7 +1,17 @@
 ﻿using UI_assets;
+using Spectre.Console;
 
-UI_Cell test = new(10, "This i[red]s a test strin[/]g with reallyreallylongwords and\nbreaks\n\nand empty lines.", UI_Cell.align.center);
-while (!test.IsDone()) {
-	Console.WriteLine($"| {test.NextLine()} |");
+string str = "[red]This is a test string[/][green] wi[/][yellow]th reallyreallylongwords[/] [red]\nand breaks\n\nand [/][[]]emp[blue]ty lines.[/]";
+
+List<UI_Cell> cell_list = new();
+cell_list.Add(new UI_Cell(21, str, align.center));
+cell_list.Add(new UI_Cell(10, str, align.left));
+cell_list.Add(new UI_Cell(11, str, align.right));
+cell_list.Add(new UI_Cell(15, str, align.left));
+UI_Line line = new(cell_list);
+
+while (!line.is_done) {
+	line.NextLine();
+	//AnsiConsole.WriteLine(line.last_line);
+	AnsiConsole.MarkupLine(line.last_line);
 }
-Console.WriteLine($"| {test.NextLine()} |");
